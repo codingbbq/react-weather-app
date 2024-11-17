@@ -1,8 +1,11 @@
 import CurrentWeather from '@/components/CurrentWeather';
+import { FavoriteCities } from '@/components/FavoriteCities';
 import HourlyTemprature from '@/components/HourlyTemprature';
 import WeatherSkeleton from '@/components/loading-skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { WeatherDetails } from '@/components/WeatherDetails';
+import { WeatherForecast } from '@/components/WeatherForecast';
 import { useGeoLocation } from '@/hooks/useGeoLocation';
 import { useForecastQuery, useReverseGeocodeQuery, useWeatherQuery } from '@/hooks/useWeather';
 import { AlertCircle, AlertTriangle, MapPin, RefreshCw } from 'lucide-react';
@@ -88,29 +91,35 @@ const WeatherDashboard = () => {
 
 	return (
 		<>
-			{/* Favorite cities */}
-			<div className='flex items-center justify-between'>
-				<h1 className='text-xl font-bold tracking-tight'>My Location</h1>
-				<Button
-					variant={'outline'}
-					size={'icon'}
-					onClick={handleRefresh}
-					disabled={weatherQuery.isFetching || forecastQuery.isFetching}
-				>
-					<RefreshCw size={4} className={weatherQuery.isFetching ? 'animate-spin' : ''} />
-				</Button>
-			</div>
-			
-            <div className='grid gap-6'>
-                <div className='flex flex-col lg:flex-row gap-4'>
-                    <CurrentWeather data={weatherQuery.data} locationName={locationName } />
-                    <HourlyTemprature data={forecastQuery.data} />
-                </div>
+			<div className='space-y-4'>
+				<FavoriteCities />
+				<div className='flex items-center justify-between'>
+					<h1 className='text-xl font-bold tracking-tight'>My Location</h1>
+					<Button
+						variant={'outline'}
+						size={'icon'}
+						onClick={handleRefresh}
+						disabled={weatherQuery.isFetching || forecastQuery.isFetching}
+					>
+						<RefreshCw
+							size={4}
+							className={weatherQuery.isFetching ? 'animate-spin' : ''}
+						/>
+					</Button>
+				</div>
 
-                <div>
-                    
-                </div>
-            </div>
+				<div className='grid gap-6'>
+					<div className='flex flex-col lg:flex-row gap-4'>
+						<CurrentWeather data={weatherQuery.data} locationName={locationName} />
+						<HourlyTemprature data={forecastQuery.data} />
+					</div>
+
+					<div className='grid gap-6 md:grid-cols-2 items-start'>
+						<WeatherDetails data={weatherQuery.data} />
+						<WeatherForecast data={forecastQuery.data} />
+					</div>
+				</div>
+			</div>
 		</>
 	);
 };
